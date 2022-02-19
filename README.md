@@ -11,12 +11,10 @@ Future<void> _createSubscriptionCubit(BuldContext context) async {
   final subscriptionCubit = SubscriptionCubit('TODO: your user key');
   await subscriptionCubit.init(
     context,
-    PurchaseProviderParams(
+    QonversionDelegate.create(
+      apiKey: 'TODO: your qonversion api key',
+      subscriptionPermissions: ['YOUR_PERMISSION'],
       isDebug: kDebugMode,
-      custom: {
-        kQonversionApiKey: 'TODO: your qonversion api key',
-        kQonversionSubscriptionPermissions: ['full_access'],
-      },
     ),
   );
 }
@@ -25,8 +23,10 @@ Future<void> _createSubscriptionCubit(BuldContext context) async {
 Getting subscription details
 
 ```dart
-Future<SubscriptionDto> getSubscriptionDetails(BuildContext context,
-    List<String> subscriptionIds,) {
+Future<SubscriptionDto> getSubscriptionDetails(
+    BuildContext context,
+    List<String> subscriptionIds,
+) {
   return subscriptionCubit.getSubscriptionDetails(context, subscriptionIds);
 }
 ```

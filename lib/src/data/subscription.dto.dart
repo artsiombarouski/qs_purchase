@@ -1,10 +1,4 @@
-enum SubscriptionBillingPeriod {
-  day,
-  week,
-  month,
-  year,
-  lifetime,
-}
+import 'package:qs_purchase/src/data/subscription_billing_period.dart';
 
 class SubscriptionDto {
   final String productId;

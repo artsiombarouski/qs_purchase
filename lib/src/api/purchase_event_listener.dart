@@ -1,3 +1,5 @@
+import 'package:qs_purchase/src/data/purchase_error.dart';
+
 /// Listener useful for analytics:
 ///
 /// final _kIsAndroid = defaultTargetPlatform == TargetPlatform.android;
@@ -33,5 +35,5 @@ class PurchaseEventListener {
 
   void onPurchaseCancel(String productId) {}
 
-  void onPurchaseError(String productId) {}
+  void onPurchaseError(String productId, PurchaseError error) {}
 }

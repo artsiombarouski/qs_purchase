@@ -1,11 +1,11 @@
-class SubscriptionStatusDto {
+class SubscriptionStateDto {
   final bool isSubscribed;
 
-  SubscriptionStatusDto({
+  SubscriptionStateDto({
     required this.isSubscribed,
   });
 
-  SubscriptionStatusDto.fromJson(Map<String, dynamic> json)
+  SubscriptionStateDto.fromJson(Map<String, dynamic> json)
       : isSubscribed = json['isSubscribed'];
 
   Map<String, dynamic> toJson() {
