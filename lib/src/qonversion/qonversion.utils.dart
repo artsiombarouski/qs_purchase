@@ -20,6 +20,7 @@ int? trialDurationToDays(QTrialDuration? duration) {
   switch (duration) {
     case QTrialDuration.threeDays:
       return 3;
+    case QTrialDuration.other:
     case QTrialDuration.week:
       return 7;
     case QTrialDuration.twoWeeks:
