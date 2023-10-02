@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:qs_purchase/qs_purchase.dart';
 import 'package:qs_purchase/src/api/purchase.delegate.dart';
 import 'package:qs_purchase/src/api/purchase_event_listener.dart';
-import 'package:qs_purchase/src/data/purchase_error.dart';
 
 class PurchaseController with PurchaseDelegate {
   final listeners = <PurchaseEventListener>[];

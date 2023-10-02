@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qs_purchase/qs_purchase.dart';
 import 'package:qs_purchase/src/api/purchase.controller.dart';
-import 'package:qs_purchase/src/data/purchase_error.dart';
 
 mixin PurchaseDelegate {
   late PurchaseController controller;

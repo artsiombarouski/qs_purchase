@@ -8,6 +8,8 @@ import 'package:qs_purchase/src/qonversion/qonversion.delegate.dart';
 import 'package:qs_purchase/src/qonversion/qonversion.utils.dart';
 
 class QonversionPlatformDelegate extends QonversionDelegate {
+  late Qonversion _instance;
+
   QonversionPlatformDelegate({
     required String apiKey,
     List<String> subscriptionPermissions = const [],
@@ -20,11 +22,15 @@ class QonversionPlatformDelegate extends QonversionDelegate {
 
   @override
   Future<void> init(BuildContext context) async {
-    await Qonversion.launch(apiKey, isObserveMode: false);
-    await _identifyUser();
+    final config = QonversionConfigBuilder(
+      apiKey,
+      QLaunchMode.subscriptionManagement,
+    );
     if (isDebug) {
-      await Qonversion.setDebugMode();
+      config.setEnvironment(QEnvironment.sandbox);
     }
+    _instance = Qonversion.initialize(config.build());
+    await _identifyUser();
   }
 
   @override
@@ -35,7 +41,7 @@ class QonversionPlatformDelegate extends QonversionDelegate {
     BuildContext context,
     List<String> products,
   ) async {
-    final apiProducts = await Qonversion.products();
+    final apiProducts = await _instance.products();
     final List<SubscriptionDto> result = [];
     for (var productKey in products) {
       final value = apiProducts[productKey];
@@ -61,19 +67,20 @@ class QonversionPlatformDelegate extends QonversionDelegate {
   Future<SubscriptionStateDto> getCurrentSubscriptionState(
     BuildContext context,
   ) async {
-    final permissions = await Qonversion.checkPermissions();
-    final apiPermission = permissions.entries
-        .firstWhereOrNull((element) =>
-            subscriptionPermissions.contains(element.value.permissionId) &&
-            element.value.isActive)
-        ?.value;
-    return SubscriptionStateDto(isSubscribed: apiPermission?.isActive == true);
+    final entitlements = await _instance.checkEntitlements();
+    final matchingEntitlement = entitlements.values.firstWhereOrNull(
+      (element) =>
+          subscriptionPermissions.contains(element.id) && element.isActive,
+    );
+    return SubscriptionStateDto(
+      isSubscribed: matchingEntitlement?.isActive == true,
+    );
   }
 
   @override
   Future<void> syncPurchases() async {
     await _identifyUser();
-    await Qonversion.syncPurchases();
+    await _instance.syncPurchases();
   }
 
   @override
@@ -86,7 +93,7 @@ class QonversionPlatformDelegate extends QonversionDelegate {
   }) async {
     try {
       await _identifyUser();
-      await Qonversion.purchase(productId);
+      await _instance.purchase(productId);
       onSuccess?.call();
     } on QPurchaseException catch (e) {
       if (e.isUserCancelled) {
@@ -101,7 +108,7 @@ class QonversionPlatformDelegate extends QonversionDelegate {
   Future<void> _identifyUser() async {
     final userKey = controller.userKey;
     if (userKey != null) {
-      await Qonversion.setUserId(userKey);
+      _instance.setUserProperty(QUserPropertyKey.customUserId, userKey);
     }
   }
 }
