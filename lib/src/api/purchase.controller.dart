@@ -50,7 +50,7 @@ class PurchaseController with PurchaseDelegate {
   }) async {
     final currentStatus = await getCurrentSubscriptionState(context);
     if (currentStatus.isSubscribed) {
-      notifyPurhcaseError(productId, PurchaseError.alreadyPurchased);
+      notifyPurchaseError(productId, PurchaseError.alreadyPurchased);
       onError?.call(PurchaseError.alreadyPurchased);
       return;
     }
@@ -66,14 +66,14 @@ class PurchaseController with PurchaseDelegate {
         onCancel?.call();
       },
       onError: (error) {
-        notifyPurhcaseError(productId, error);
+        notifyPurchaseError(productId, error);
         onError?.call(error);
       },
     ).catchError((e) {
       if (kDebugMode) {
         print('PurchaseError: $e');
       }
-      notifyPurhcaseError(productId, PurchaseError.unknown);
+      notifyPurchaseError(productId, PurchaseError.unknown);
       onError?.call(PurchaseError.unknown);
     });
   }
@@ -95,7 +95,7 @@ class PurchaseController with PurchaseDelegate {
     }
   }
 
-  void notifyPurhcaseError(String productId, PurchaseError error) {
+  void notifyPurchaseError(String productId, PurchaseError error) {
     for (var e in listeners) {
       e.onPurchaseError(productId, error);
     }
