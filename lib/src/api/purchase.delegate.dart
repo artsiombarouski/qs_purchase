@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qs_purchase/qs_purchase.dart';
 import 'package:qs_purchase/src/api/purchase.controller.dart';
+import 'package:qs_purchase/src/data/purchased_product.dart';
 
 mixin PurchaseDelegate {
   late PurchaseController controller;
@@ -12,7 +13,7 @@ mixin PurchaseDelegate {
   Future<void> purchaseSubscription(
     BuildContext context,
     String productId, {
-    VoidCallback? onSuccess,
+    Function(PurchasedProduct product)? onSuccess,
     VoidCallback? onCancel,
     Function(PurchaseError error)? onError,
   });

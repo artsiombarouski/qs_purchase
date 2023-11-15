@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:qs_purchase/qs_purchase.dart';
 import 'package:qs_purchase/src/api/purchase.delegate.dart';
 import 'package:qs_purchase/src/api/purchase_event_listener.dart';
+import 'package:qs_purchase/src/data/purchased_product.dart';
 
 class PurchaseController with PurchaseDelegate {
   final listeners = <PurchaseEventListener>[];
@@ -43,7 +44,7 @@ class PurchaseController with PurchaseDelegate {
   Future<void> purchaseSubscription(
     BuildContext context,
     String productId, {
-    VoidCallback? onSuccess,
+    Function(PurchasedProduct product)? onSuccess,
     VoidCallback? onCancel,
     Function(PurchaseError error)? onError,
   }) async {
@@ -56,9 +57,9 @@ class PurchaseController with PurchaseDelegate {
     return delegate.purchaseSubscription(
       context,
       productId,
-      onSuccess: () {
-        notifyPurchaseSuccess(productId);
-        onSuccess?.call();
+      onSuccess: (product) {
+        notifyPurchaseSuccess(product);
+        onSuccess?.call(product);
       },
       onCancel: () {
         notifyPurchaseCancel(productId);
@@ -82,9 +83,9 @@ class PurchaseController with PurchaseDelegate {
     return delegate.syncPurchases();
   }
 
-  void notifyPurchaseSuccess(String productId) {
+  void notifyPurchaseSuccess(PurchasedProduct product) {
     for (var e in listeners) {
-      e.onPurchaseSuccess(productId);
+      e.onPurchaseSuccess(product);
     }
   }
 

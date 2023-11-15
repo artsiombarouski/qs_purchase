@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:qonversion_flutter/qonversion_flutter.dart';
 import 'package:qs_purchase/src/data/purchase_error.dart';
+import 'package:qs_purchase/src/data/purchased_product.dart';
 import 'package:qs_purchase/src/data/subscription.dto.dart';
 import 'package:qs_purchase/src/data/subscription_state.dto.dart';
 import 'package:qs_purchase/src/qonversion/qonversion.delegate.dart';
@@ -87,14 +88,22 @@ class QonversionPlatformDelegate extends QonversionDelegate {
   Future<void> purchaseSubscription(
     BuildContext context,
     String productId, {
-    VoidCallback? onSuccess,
+    Function(PurchasedProduct product)? onSuccess,
     VoidCallback? onCancel,
     Function(PurchaseError error)? onError,
   }) async {
     try {
       await _identifyUser();
       await _instance.purchase(productId);
-      onSuccess?.call();
+      final productInfo = await _instance.products().then((value) {
+        return value[productId];
+      });
+      onSuccess?.call(PurchasedProduct(
+        productId,
+        productInfo?.price,
+        productInfo?.currencyCode,
+        qonversionProductTypeToQsProductType(productInfo?.type),
+      ));
     } on QPurchaseException catch (e) {
       if (e.isUserCancelled) {
         onCancel?.call();

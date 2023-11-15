@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qs_purchase/src/api/purchase.controller.dart';
 import 'package:qs_purchase/src/api/purchase.delegate.dart';
 import 'package:qs_purchase/src/data/purchase_error.dart';
+import 'package:qs_purchase/src/data/purchased_product.dart';
 import 'package:qs_purchase/src/data/subscription.dto.dart';
 import 'package:qs_purchase/src/data/subscription_state.dto.dart';
 import 'package:qs_purchase/src/subscriptions/local_user.store.dart';
@@ -97,7 +98,7 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
   Future<void> purchase(
     BuildContext context,
     String productId, {
-    VoidCallback? onSuccess,
+    Function(PurchasedProduct product)? onSuccess,
     VoidCallback? onCancel,
     Function(PurchaseError error)? onError,
   }) async {
@@ -105,18 +106,18 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
       onError?.call(PurchaseError.notInitialized);
       return;
     }
-    bool isSuccess = false;
+    PurchasedProduct? result;
     PurchaseError? resultError;
     await _controller!.purchaseSubscription(
       context,
       productId,
-      onSuccess: () => isSuccess = true,
+      onSuccess: (product) => result = product,
       onCancel: onCancel,
       onError: (error) => resultError = error,
     );
-    if (isSuccess) {
+    if (result != null) {
       await sync(context);
-      onSuccess?.call();
+      onSuccess?.call(result!);
     } else if (resultError != null) {
       if (resultError == PurchaseError.alreadyPurchased) {
         await sync(context);

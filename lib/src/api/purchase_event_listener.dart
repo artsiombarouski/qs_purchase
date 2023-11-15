@@ -1,3 +1,4 @@
+import 'package:qs_purchase/src/data/purchased_product.dart';
 import 'package:qs_purchase/src/data/purchase_error.dart';
 
 /// Listener useful for analytics:
@@ -6,9 +7,9 @@ import 'package:qs_purchase/src/data/purchase_error.dart';
 ///
 /// class PurchaseAnalyticsListener extends PurchaseEventListener {
 ///   @override
-///   void onPurchaseSuccess(String productId) {
+///   void onPurchaseSuccess(PurchasedProduct product) {
 ///     Analytics.event('subscribeSuccess', params: {
-///       'productId': productId,
+///       'productId': product.id,
 ///       Analytics.kPlatform: _kIsAndroid ? 'android' : 'ios',
 ///     });
 ///   }
@@ -31,7 +32,7 @@ import 'package:qs_purchase/src/data/purchase_error.dart';
 /// }
 ///
 class PurchaseEventListener {
-  void onPurchaseSuccess(String productId) {}
+  void onPurchaseSuccess(PurchasedProduct product) {}
 
   void onPurchaseCancel(String productId) {}
 
