@@ -2,34 +2,31 @@ import 'package:qonversion_flutter/qonversion_flutter.dart';
 import 'package:qs_purchase/src/data/purchased_product.dart';
 import 'package:qs_purchase/src/data/subscription_billing_period.dart';
 
-SubscriptionBillingPeriod? durationToBillingPeriod(QProductDuration? duration) {
-  switch (duration) {
-    case QProductDuration.weekly:
+SubscriptionBillingPeriod? durationToBillingPeriod(
+  QSubscriptionPeriod? period,
+) {
+  switch (period?.unit) {
+    case QSubscriptionPeriodUnit.week:
       return SubscriptionBillingPeriod.week;
-    case QProductDuration.monthly:
+    case QSubscriptionPeriodUnit.month:
       return SubscriptionBillingPeriod.month;
-    case QProductDuration.annual:
+    case QSubscriptionPeriodUnit.year:
       return SubscriptionBillingPeriod.year;
-    case QProductDuration.lifetime:
-      return SubscriptionBillingPeriod.lifetime;
     default:
       return null;
   }
 }
 
-int? trialDurationToDays(QTrialDuration? duration) {
-  switch (duration) {
-    case QTrialDuration.threeDays:
-      return 3;
-    case QTrialDuration.other:
-    case QTrialDuration.week:
-      return 7;
-    case QTrialDuration.twoWeeks:
-      return 14;
-    case QTrialDuration.month:
-      return 30;
-    case QTrialDuration.year:
-      return 365;
+int? trialDurationToDays(QSubscriptionPeriod? period) {
+  switch (period?.unit) {
+    case QSubscriptionPeriodUnit.day:
+      return period?.unitCount;
+    case QSubscriptionPeriodUnit.week:
+      return 7 * period!.unitCount;
+    case QSubscriptionPeriodUnit.month:
+      return 30 * period!.unitCount;
+    case QSubscriptionPeriodUnit.year:
+      return 365 * period!.unitCount;
     default:
       return null;
   }

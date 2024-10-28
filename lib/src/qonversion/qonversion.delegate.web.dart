@@ -7,14 +7,10 @@ import 'package:qs_purchase/src/qonversion/qonversion.delegate.dart';
 
 class QonversionPlatformDelegate extends QonversionDelegate {
   QonversionPlatformDelegate({
-    required String apiKey,
-    List<String> subscriptionPermissions = const [],
-    bool isDebug = false,
-  }) : super(
-          apiKey: apiKey,
-          subscriptionPermissions: subscriptionPermissions,
-          isDebug: isDebug,
-        );
+    required super.apiKey,
+    super.subscriptionPermissions,
+    super.isDebug,
+  });
 
   @override
   Future<void> dispose() {

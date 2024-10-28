@@ -12,14 +12,10 @@ class QonversionPlatformDelegate extends QonversionDelegate {
   late Qonversion _instance;
 
   QonversionPlatformDelegate({
-    required String apiKey,
-    List<String> subscriptionPermissions = const [],
-    bool isDebug = false,
-  }) : super(
-          apiKey: apiKey,
-          subscriptionPermissions: subscriptionPermissions,
-          isDebug: isDebug,
-        );
+    required super.apiKey,
+    super.subscriptionPermissions,
+    super.isDebug,
+  });
 
   @override
   Future<void> init(BuildContext context) async {
@@ -56,8 +52,8 @@ class QonversionPlatformDelegate extends QonversionDelegate {
       final dto = SubscriptionDto(
         productId: productKey,
         displayPrice: price,
-        billingPeriod: durationToBillingPeriod(value.duration),
-        trialDurationDays: trialDurationToDays(value.trialDuration),
+        billingPeriod: durationToBillingPeriod(value.subscriptionPeriod),
+        trialDurationDays: trialDurationToDays(value.trialPeriod),
       );
       result.add(dto);
     }
@@ -94,7 +90,7 @@ class QonversionPlatformDelegate extends QonversionDelegate {
   }) async {
     try {
       await _identifyUser();
-      await _instance.purchase(productId);
+      await _instance.purchase(QPurchaseModel(productId));
       final productInfo = await _instance.products().then((value) {
         return value[productId];
       });
