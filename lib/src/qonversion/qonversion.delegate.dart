@@ -22,7 +22,8 @@ abstract class QonversionDelegate with PurchaseDelegate {
     bool isDebug = false,
   }) =>
       QonversionPlatformDelegate(
-          apiKey: apiKey,
-          subscriptionPermissions: subscriptionPermissions,
-          isDebug: isDebug);
+        apiKey: apiKey,
+        subscriptionPermissions: subscriptionPermissions,
+        isDebug: isDebug,
+      );
 }

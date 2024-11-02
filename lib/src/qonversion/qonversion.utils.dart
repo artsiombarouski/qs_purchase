@@ -6,6 +6,11 @@ SubscriptionBillingPeriod? durationToBillingPeriod(
   QSubscriptionPeriod? period,
 ) {
   switch (period?.unit) {
+    case QSubscriptionPeriodUnit.day:
+      if (period?.unitCount == 7) {
+        return SubscriptionBillingPeriod.week;
+      }
+      return SubscriptionBillingPeriod.day;
     case QSubscriptionPeriodUnit.week:
       return SubscriptionBillingPeriod.week;
     case QSubscriptionPeriodUnit.month:
